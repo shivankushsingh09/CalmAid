@@ -51,6 +51,14 @@ flask --app app --debug run
 
 ```
 
-## Introduction
+### Home Page
 
-[Watch the introduction video](./Presentation/CalmAid-intro.mp4)
+![image](./Images/Home%20Page.png)
+
+### Chat Section
+
+![image](./Images/Chat%20Section.png)
+
+### Chat to CalmAid
+
+![image](./Images/Chat%20to%20CalmAid.png)
