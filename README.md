@@ -51,4 +51,6 @@ flask --app app --debug run
 
 ```
 
-![image](./Images/)
+## Introduction
+
+[Watch the introduction video](./Presentation/CalmAid-intro.mp4)
