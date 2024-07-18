@@ -17,7 +17,7 @@ https://github.com/shivankushsingh09/CalmAid.git
 ```
 
 ```
-cd Mental-health-Chatbot/
+cd CalmAid/
 ```
 
 2. Create and activate virtual environment
