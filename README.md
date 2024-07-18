@@ -51,4 +51,4 @@ flask --app app --debug run
 
 ```
 
-![image](./Images/)
+![image](./Images/ScreenShot.png)
