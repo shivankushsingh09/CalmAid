@@ -6,7 +6,7 @@ The development of a chatbot capable of language translation holds transformativ
 
 https://codeaxe.co.ke/multilingobot/
 
-First step is to download the models from the link <a href="https://drive.google.com/drive/u/0/folders/1l__8IwDqARnnmteOAd6vv3UTmexve9J_"> MODEL </a> add the model in the root project directory.
+First step is to download the models from the link <a href="https://drive.google.com/drive/u/0/folders/13jNl0B3OQkFGuSrncXtV6V31Uc9ijKtg"> MODEL </a> add the model in the root project directory.
 
 The following instructions were tested on the Windows and Linux with Python 3.8.
 
