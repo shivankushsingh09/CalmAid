@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>CalmAid</title>
+  <link rel="shortcut icon" href="static/img/mhcicon.png" type="image/x-icon">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles/style.css') }}">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+  <style>
+    /* Define the keyframes for the up and down movement */
+    @keyframes moveY {
+
+      0%,
+      100% {
+        transform: translateY(0);
+      }
+
+      50% {
+        transform: translateY(20px);
+        /* Adjust this value to control the movement distance */
+      }
+    }
+
+    /* Apply the animation to the image */
+    .move-up-down {
+      animation: moveY 2s infinite;
+      /* 2s is the duration of the animation cycle, adjust as needed */
+    }
+  </style>
+
+  <style>
+    /* Define the cursor for the typing effect */
+    .typing::after {
+      content: '|';
+      animation: blink 1s step-end infinite;
+    }
+
+    @keyframes blink {
+
+      from,
+      to {
+        opacity: 1;
+      }
+
+      50% {
+        opacity: 0;
+      }
+    }
+  </style>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const sentences = [
+        "CalmAid",
+        "Your Mental Health Companion",
+        "Talk to us Anytime"
+      ];
+
+      let currentSentenceIndex = 0;
+      let currentCharIndex = 0;
+      const typingSpeed = 100; // milliseconds per character
+      const erasingSpeed = 50; // milliseconds per character
+      const delayBetweenSentences = 2000; // delay between sentences
+
+      const typingElement = document.getElementById('typing');
+      typingElement.classList.add('typing');
+
+      function typeSentence() {
+        if (currentCharIndex < sentences[currentSentenceIndex].length) {
+          typingElement.textContent += sentences[currentSentenceIndex].charAt(currentCharIndex);
+          currentCharIndex++;
+          setTimeout(typeSentence, typingSpeed);
+        } else {
+          setTimeout(eraseSentence, delayBetweenSentences);
+        }
+      }
+
+      function eraseSentence() {
+        if (currentCharIndex > 0) {
+          typingElement.textContent = sentences[currentSentenceIndex].substring(0, currentCharIndex - 1);
+          currentCharIndex--;
+          setTimeout(eraseSentence, erasingSpeed);
+        } else {
+          currentSentenceIndex = (currentSentenceIndex + 1) % sentences.length;
+          setTimeout(typeSentence, typingSpeed);
+        }
+      }
+
+      // Start the typing animation
+      typeSentence();
+    });
+  </script>
+</head>
+
+<body>
+
+  <div class="title">
+    <div style="text-align: center; 
+    font-family: 'Nunito', sans-serif; 
+    background-color: #012970;
+    padding: 30px;
+    border-radius: 10px; width: 380px; height: 330px;" class="container">
+      <img src="static/img/chatboat.png" alt="" class="img-fluid move-up-down" style="width:210px; height:210px;">
+      <h3 style="color: #fff; font-family: monospace; font-size: 20px; margin-top: 20px; text-align: center; "
+        id="typing">
+      </h3>
+    </div>
+    <div>
+      <div id="chatbot" class="main-card collapsed">
+        <button id="chatbot_toggle">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M0 0h24v24H0V0z" fill="none" />
+            <path
+              d="M15 4v7H5.17l-.59.59-.58.58V4h11m1-2H3c-.55 0-1 .45-1 1v14l4-4h10c.55 0 1-.45 1-1V3c0-.55-.45-1-1-1zm5 4h-2v9H6v2c0 .55.45 1 1 1h11l4 4V7c0-.55-.45-1-1-1z" />
+          </svg>
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" style="display:none">
+            <path d="M0 0h24v24H0V0z" fill="none" />
+            <path
+              d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z" />
+          </svg>
+          </svg>
+        </button>
+        <div class="main-title">
+          <div>
+            <img src="static/img/chatboat.png" alt="" class="img-fluid" style="padding: 8px;">
+          </div>
+          <span style="color: #fff; font-family: monospace;">
+            CalmAid
+          </span>
+        </div>
+        <!-- partial:index.partial.html -->
+
+        <main class="msger-chat">
+          <div class="msg left-msg">
+            <div class="msg-img" style="background-image: url(static/img/mhcicon.png); width: 130px !important;">
+            </div>
+            <div class="msg-bubble">
+              <div class="msg-info">
+                <div class="msg-info-name"> Psychiatrist Bot</div>
+                <div class="msg-info-time"><time id="clock"></time></div>
+              </div>
+              <div class="msg-text" style="text-align: justify !important;">
+                Welcome to CalmAid - Mental Health Chatbot, a safe and supportive space where you can share your
+                thoughts and
+                feelings
+                without fear of judgement.
+              </div>
+            </div>
+          </div>
+        </main>
+        <form class="msger-inputarea">
+          <input type="text" class="msger-input" id="textInput" placeholder="Enter your message...">
+          <button type="submit" class="msger-send-btn">Send</button>
+        </form>
+        <script src=' https://use.fontawesome.com/releases/v5.0.13/js/all.js'>
+        </script>
+        <script src="{{ url_for('static', filename='js/bot.js') }}"></script>
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>
