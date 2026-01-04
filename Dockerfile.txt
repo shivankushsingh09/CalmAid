@@ -1,0 +1,54 @@
+# Dockerfile for CalmAid - Flask chatbot using Keras + transformers + spaCy
+FROM python:3.10-slim
+
+# Keep Python from writing .pyc and enable unbuffered stdout/stderr
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
+
+WORKDIR /app
+
+# Install system deps needed to build some Python packages and for media (if needed)
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
+    git \
+    wget \
+    curl \
+    ffmpeg \
+    libsndfile1 \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copy requirements first to leverage Docker cache
+COPY requirements.txt /app/requirements.txt
+
+# Upgrade pip and install heavy python libs that are required by app but not listed (tensorflow / torch)
+RUN pip install --upgrade pip
+
+# Try installing a CPU wheel of torch from the official PyTorch index first; fallback to plain pip install if the wheel URL or version changes.
+# (This keeps transformers pipelines functional; change versions if you need different CUDA/GPU support.)
+RUN pip install tensorflow-cpu==2.11.0 || pip install tensorflow-cpu
+RUN pip install -f https://download.pytorch.org/whl/cpu/torch_stable.html torch==1.13.1+cpu || pip install torch
+
+# Install the rest of python dependencies
+RUN pip install --no-cache-dir -r /app/requirements.txt
+
+# Install gunicorn for production serving
+RUN pip install --no-cache-dir gunicorn
+
+# Copy the rest of the repository into the image
+COPY . /app
+
+# Pre-download NLTK popular data and spaCy English model at build time so first run is faster and deterministic
+# - NLTK 'popular' is used by app.py (nltk.download('popular'))
+# - spaCy model en_core_web_sm is used by app.py (spacy.load("en_core_web_sm"))
+RUN python -c "import nltk; nltk.download('popular')" \
+ && python -m spacy download en_core_web_sm
+
+# Ensure model directories/files are present (optional debug-friendly)
+# If your translation models are large and are not in the repo, you may want to mount them or fetch them at runtime.
+# EXPOSE the port (change if you wish)
+EXPOSE 8080
+
+# Run the flask app via gunicorn (app:app)
+# - Bind to 0.0.0.0:8080 (container port)
+# - Increase timeout as model loading & translations may take time on cold starts
+CMD ["gunicorn", "--bind", "0.0.0.0:8080", "app:app", "--workers", "1", "--threads", "4", "--timeout", "120"]
